@@ -10,27 +10,6 @@ This MCP Server provides an LLM interface for interacting with your Cloud Foundr
 ./mvnw clean package
 ```
 
-### Using with MCP Client
-
-By default, this MCP server runs with the SSE transport. Configure your MCP client like this:
-
-```json
-{
-  "mcpServers": {
-    "cloud-foundry": {
-      "url": "https://[URL for deployed CF MCP server]/sse",
-      "env": {
-        "CF_APIHOST": "[Your CF API Endpoint e.g. api.sys.mycf.com]",
-        "CF_USERNAME": "[Your CF User]",
-        "CF_PASSWORD": "[Your CF Password]",
-        "CF_ORG": "[Your Org]",
-        "CF_SPACE": "[Your Space]"
-      }
-    }
-  }
-}
-```
-
 ### Deploying to Cloud Foundry with User-Provided Service
 
 When deploying the MCP server to Cloud Foundry, you can use a user-provided service to inject credentials instead of using environment variables. This approach keeps sensitive credentials out of your manifest files.
@@ -61,7 +40,7 @@ After deploying the application, bind the service:
 
 ```bash
 cf bind-service cloud-foundry-mcp cf-client
-cf restage cloud-foundry-mcp
+cf restart cloud-foundry-mcp
 ```
 
 Or include the service binding in your `manifest.yml`:
@@ -90,7 +69,7 @@ cf update-user-provided-service cf-client -p '{
   "org": "new-org",
   "space": "new-space"
 }'
-cf restage cloud-foundry-mcp
+cf restart cloud-foundry-mcp
 ```
 
 ## Capabilities
