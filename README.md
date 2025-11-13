@@ -31,6 +31,68 @@ By default, this MCP server runs with the SSE transport. Configure your MCP clie
 }
 ```
 
+### Deploying to Cloud Foundry with User-Provided Service
+
+When deploying the MCP server to Cloud Foundry, you can use a user-provided service to inject credentials instead of using environment variables. This approach keeps sensitive credentials out of your manifest files.
+
+#### Create the User-Provided Service
+
+Create a user-provided service named `cf-client` with the required Cloud Foundry credentials:
+
+```bash
+cf create-user-provided-service cf-client -p '{
+  "apihost": "api.sys.mycf.com",
+  "username": "your-cf-username",
+  "password": "your-cf-password",
+  "org": "your-org",
+  "space": "your-space"
+}'
+```
+
+Or create it interactively by providing credentials one at a time:
+
+```bash
+cf create-user-provided-service cf-client -p "apihost, username, password, org, space"
+```
+
+#### Bind the Service to Your Application
+
+After deploying the application, bind the service:
+
+```bash
+cf bind-service cloud-foundry-mcp cf-client
+cf restage cloud-foundry-mcp
+```
+
+Or include the service binding in your `manifest.yml`:
+
+```yaml
+applications:
+- name: cloud-foundry-mcp
+  memory: 1G
+  instances: 1
+  path: target/cloud-foundry-mcp-0.0.1-SNAPSHOT.jar
+  services:
+  - cf-client
+```
+
+The application will automatically read credentials from the `cf-client` service binding via the VCAP_SERVICES environment variable, as configured in `src/main/resources/application.yaml`.
+
+#### Update the Service Credentials
+
+If you need to update the credentials:
+
+```bash
+cf update-user-provided-service cf-client -p '{
+  "apihost": "api.sys.mycf.com",
+  "username": "new-username",
+  "password": "new-password",
+  "org": "new-org",
+  "space": "new-space"
+}'
+cf restage cloud-foundry-mcp
+```
+
 ## Capabilities
 
 This MCP server exposes the following Cloud Foundry operations as tools:
