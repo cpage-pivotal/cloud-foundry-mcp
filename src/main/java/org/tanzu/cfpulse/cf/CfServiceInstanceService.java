@@ -1,8 +1,8 @@
 package org.tanzu.cfpulse.cf;
 
 import org.cloudfoundry.operations.services.*;
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
+import org.springaicommunity.mcp.annotation.McpTool;
+import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,35 +23,35 @@ public class CfServiceInstanceService extends CfBaseService {
         super(operationsFactory);
     }
 
-    @Tool(description = SERVICE_INSTANCE_LIST)
+    @McpTool(description = SERVICE_INSTANCE_LIST)
     public List<ServiceInstanceSummary> serviceInstancesList(
-            @ToolParam(description = ORG_PARAM, required = false) String organization,
-            @ToolParam(description = SPACE_PARAM, required = false) String space) {
+            @McpToolParam(description = ORG_PARAM, required = false) String organization,
+            @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         return getOperations(organization, space).services().listInstances().collectList().block();
     }
 
-    @Tool(description = SERVICE_INSTANCE_DETAIL)
+    @McpTool(description = SERVICE_INSTANCE_DETAIL)
     public ServiceInstance serviceInstanceDetails(
-            @ToolParam(description = SI_NAME_PARAM) String serviceInstanceName,
-            @ToolParam(description = ORG_PARAM, required = false) String organization,
-            @ToolParam(description = SPACE_PARAM, required = false) String space) {
+            @McpToolParam(description = SI_NAME_PARAM) String serviceInstanceName,
+            @McpToolParam(description = ORG_PARAM, required = false) String organization,
+            @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         GetServiceInstanceRequest request = GetServiceInstanceRequest.builder().name(serviceInstanceName).build();
         return getOperations(organization, space).services().getInstance(request).block();
     }
 
-    @Tool(description = SERVICE_OFFERINGS_LIST)
+    @McpTool(description = SERVICE_OFFERINGS_LIST)
     public List<ServiceOffering> serviceOfferingsList(
-            @ToolParam(description = ORG_PARAM, required = false) String organization,
-            @ToolParam(description = SPACE_PARAM, required = false) String space) {
+            @McpToolParam(description = ORG_PARAM, required = false) String organization,
+            @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         ListServiceOfferingsRequest request = ListServiceOfferingsRequest.builder().build();
         return getOperations(organization, space).services().listServiceOfferings(request).collectList().block();
     }
 
-    @Tool(description = BIND_SERVICE_INSTANCE)
-    public void bindServiceInstance(@ToolParam(description = SI_NAME_PARAM) String serviceInstanceName,
-                                    @ToolParam(description = NAME_PARAM) String applicationName,
-                                    @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                    @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = BIND_SERVICE_INSTANCE)
+    public void bindServiceInstance(@McpToolParam(description = SI_NAME_PARAM) String serviceInstanceName,
+                                    @McpToolParam(description = NAME_PARAM) String applicationName,
+                                    @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                    @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         BindServiceInstanceRequest request = BindServiceInstanceRequest.builder().
                 serviceInstanceName(serviceInstanceName).
                 applicationName(applicationName).
@@ -59,11 +59,11 @@ public class CfServiceInstanceService extends CfBaseService {
         getOperations(organization, space).services().bind(request).block();
     }
 
-    @Tool(description = UNBIND_SERVICE_INSTANCE)
-    public void unbindServiceInstance(@ToolParam(description = SI_NAME_PARAM) String serviceInstanceName,
-                                      @ToolParam(description = NAME_PARAM) String applicationName,
-                                      @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                      @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = UNBIND_SERVICE_INSTANCE)
+    public void unbindServiceInstance(@McpToolParam(description = SI_NAME_PARAM) String serviceInstanceName,
+                                      @McpToolParam(description = NAME_PARAM) String applicationName,
+                                      @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                      @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         UnbindServiceInstanceRequest request = UnbindServiceInstanceRequest.builder().
                 serviceInstanceName(serviceInstanceName).
                 applicationName(applicationName).
@@ -71,10 +71,10 @@ public class CfServiceInstanceService extends CfBaseService {
         getOperations(organization, space).services().unbind(request).block();
     }
 
-    @Tool(description = DELETE_SERVICE_INSTANCE)
-    public void deleteServiceInstance(@ToolParam(description = SI_NAME_PARAM) String serviceInstanceName,
-                                     @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                     @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = DELETE_SERVICE_INSTANCE)
+    public void deleteServiceInstance(@McpToolParam(description = SI_NAME_PARAM) String serviceInstanceName,
+                                     @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                     @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         DeleteServiceInstanceRequest request = DeleteServiceInstanceRequest.builder().
                 name(serviceInstanceName).
                 build();

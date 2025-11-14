@@ -1,8 +1,8 @@
 package org.tanzu.cfpulse.cf;
 
 import org.cloudfoundry.operations.applications.*;
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
+import org.springaicommunity.mcp.annotation.McpTool;
+import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Paths;
@@ -30,30 +30,30 @@ public class CfApplicationService extends CfBaseService {
         super(operationsFactory);
     }
 
-    @Tool(description = APPLICATION_LIST)
+    @McpTool(description = APPLICATION_LIST)
     public List<ApplicationSummary> applicationsList(
-            @ToolParam(description = ORG_PARAM, required = false) String organization,
-            @ToolParam(description = SPACE_PARAM, required = false) String space) {
+            @McpToolParam(description = ORG_PARAM, required = false) String organization,
+            @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         return getOperations(organization, space).applications().list().collectList().block();
     }
 
-    @Tool(description = APPLICATION_DETAILS)
+    @McpTool(description = APPLICATION_DETAILS)
     public ApplicationDetail applicationDetails(
-            @ToolParam(description = NAME_PARAM) String applicationName,
-            @ToolParam(description = ORG_PARAM, required = false) String organization,
-            @ToolParam(description = SPACE_PARAM, required = false) String space) {
+            @McpToolParam(description = NAME_PARAM) String applicationName,
+            @McpToolParam(description = ORG_PARAM, required = false) String organization,
+            @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         GetApplicationRequest request = GetApplicationRequest.builder().name(applicationName).build();
         return getOperations(organization, space).applications().get(request).block();
     }
 
-    @Tool(description = PUSH_APPLICATION)
-    public void pushApplication(@ToolParam(description = NAME_PARAM) String applicationName,
-                                @ToolParam(description = PATH_PARAM) String path,
-                                @ToolParam(description = NO_START_PARAM, required = false) Boolean noStart,
-                                @ToolParam(description = MEMORY_PARAM, required = false) Integer memory,
-                                @ToolParam(description = DISK_PARAM, required = false) Integer disk,
-                                @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = PUSH_APPLICATION)
+    public void pushApplication(@McpToolParam(description = NAME_PARAM) String applicationName,
+                                @McpToolParam(description = PATH_PARAM) String path,
+                                @McpToolParam(description = NO_START_PARAM, required = false) Boolean noStart,
+                                @McpToolParam(description = MEMORY_PARAM, required = false) Integer memory,
+                                @McpToolParam(description = DISK_PARAM, required = false) Integer disk,
+                                @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         PushApplicationRequest request = PushApplicationRequest.builder().
                 name(applicationName).
                 path(Paths.get(path)).
@@ -78,13 +78,13 @@ public class CfApplicationService extends CfBaseService {
         }
     }
 
-    @Tool(description = SCALE_APPLICATION)
-    public void scaleApplication(@ToolParam(description = NAME_PARAM) String applicationName,
-                                 @ToolParam(description = INSTANCES_PARAM, required = false) Integer instances,
-                                 @ToolParam(description = MEMORY_PARAM, required = false) Integer memory,
-                                 @ToolParam(description = DISK_PARAM, required = false) Integer disk,
-                                 @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                 @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = SCALE_APPLICATION)
+    public void scaleApplication(@McpToolParam(description = NAME_PARAM) String applicationName,
+                                 @McpToolParam(description = INSTANCES_PARAM, required = false) Integer instances,
+                                 @McpToolParam(description = MEMORY_PARAM, required = false) Integer memory,
+                                 @McpToolParam(description = DISK_PARAM, required = false) Integer disk,
+                                 @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                 @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         ScaleApplicationRequest scaleApplicationRequest = ScaleApplicationRequest.builder().
                 name(applicationName).
                 instances(instances).
@@ -94,38 +94,38 @@ public class CfApplicationService extends CfBaseService {
         getOperations(organization, space).applications().scale(scaleApplicationRequest).block();
     }
 
-    @Tool(description = START_APPLICATION)
-    public void startApplication(@ToolParam(description = NAME_PARAM) String applicationName,
-                                @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = START_APPLICATION)
+    public void startApplication(@McpToolParam(description = NAME_PARAM) String applicationName,
+                                @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         StartApplicationRequest startApplicationRequest = StartApplicationRequest.builder().
                 name(applicationName).
                 build();
         getOperations(organization, space).applications().start(startApplicationRequest).block();
     }
 
-    @Tool(description = STOP_APPLICATION)
-    public void stopApplication(@ToolParam(description = NAME_PARAM) String applicationName,
-                               @ToolParam(description = ORG_PARAM, required = false) String organization,
-                               @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = STOP_APPLICATION)
+    public void stopApplication(@McpToolParam(description = NAME_PARAM) String applicationName,
+                               @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                               @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         StopApplicationRequest stopApplicationRequest = StopApplicationRequest.builder().
                 name(applicationName).
                 build();
         getOperations(organization, space).applications().stop(stopApplicationRequest).block();
     }
 
-    @Tool(description = RESTART_APPLICATION)
-    public void restartApplication(@ToolParam(description = NAME_PARAM) String applicationName,
-                                  @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                  @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = RESTART_APPLICATION)
+    public void restartApplication(@McpToolParam(description = NAME_PARAM) String applicationName,
+                                  @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                  @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         RestartApplicationRequest request = RestartApplicationRequest.builder().name(applicationName).build();
         getOperations(organization, space).applications().restart(request).block();
     }
 
-    @Tool(description = DELETE_APPLICATION)
-    public void deleteApplication(@ToolParam(description = NAME_PARAM) String applicationName,
-                                 @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                 @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = DELETE_APPLICATION)
+    public void deleteApplication(@McpToolParam(description = NAME_PARAM) String applicationName,
+                                 @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                 @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         DeleteApplicationRequest deleteApplicationRequest = DeleteApplicationRequest.builder().
                 name(applicationName).
                 build();

@@ -6,8 +6,8 @@ import org.cloudfoundry.operations.spaces.CreateSpaceRequest;
 import org.cloudfoundry.operations.spaces.DeleteSpaceRequest;
 import org.cloudfoundry.operations.spaces.RenameSpaceRequest;
 import org.cloudfoundry.operations.spaces.SpaceSummary;
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
+import org.springaicommunity.mcp.annotation.McpTool;
+import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,23 +30,23 @@ public class CfSpaceService extends CfBaseService {
         super(operationsFactory);
     }
 
-    @Tool(description = SPACE_LIST)
+    @McpTool(description = SPACE_LIST)
     public List<SpaceSummary> spacesList(
-            @ToolParam(description = ORG_PARAM, required = false) String organization) {
+            @McpToolParam(description = ORG_PARAM, required = false) String organization) {
         return getOperations(organization, null).spaces().list().collectList().block();
     }
 
-    @Tool(description = GET_SPACE_QUOTA)
-    public SpaceQuota getSpaceQuota(@ToolParam(description = SPACE_QUOTA_NAME_PARAM) String spaceName,
-                                   @ToolParam(description = ORG_PARAM, required = false) String organization) {
+    @McpTool(description = GET_SPACE_QUOTA)
+    public SpaceQuota getSpaceQuota(@McpToolParam(description = SPACE_QUOTA_NAME_PARAM) String spaceName,
+                                   @McpToolParam(description = ORG_PARAM, required = false) String organization) {
         GetSpaceQuotaRequest request = GetSpaceQuotaRequest.builder().name(spaceName).build();
         return getOperations(organization, null).spaceAdmin().get(request).block();
     }
 
-    @Tool(description = CREATE_SPACE)
-    public void createSpace(@ToolParam(description = SPACE_NAME_PARAM) String spaceName,
-                           @ToolParam(description = ORG_PARAM, required = false) String organization,
-                           @ToolParam(description = SPACE_QUOTA_PARAM, required = false) String spaceQuota) {
+    @McpTool(description = CREATE_SPACE)
+    public void createSpace(@McpToolParam(description = SPACE_NAME_PARAM) String spaceName,
+                           @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                           @McpToolParam(description = SPACE_QUOTA_PARAM, required = false) String spaceQuota) {
         CreateSpaceRequest.Builder builder = CreateSpaceRequest.builder().name(spaceName);
         if (organization != null) {
             builder.organization(organization);
@@ -58,17 +58,17 @@ public class CfSpaceService extends CfBaseService {
         getOperations(organization, null).spaces().create(request).block();
     }
 
-    @Tool(description = DELETE_SPACE)
-    public void deleteSpace(@ToolParam(description = SPACE_NAME_PARAM) String spaceName,
-                           @ToolParam(description = ORG_PARAM, required = false) String organization) {
+    @McpTool(description = DELETE_SPACE)
+    public void deleteSpace(@McpToolParam(description = SPACE_NAME_PARAM) String spaceName,
+                           @McpToolParam(description = ORG_PARAM, required = false) String organization) {
         DeleteSpaceRequest request = DeleteSpaceRequest.builder().name(spaceName).build();
         getOperations(organization, null).spaces().delete(request).block();
     }
 
-    @Tool(description = RENAME_SPACE)
-    public void renameSpace(@ToolParam(description = SPACE_NAME_PARAM) String currentSpaceName,
-                           @ToolParam(description = NEW_SPACE_NAME_PARAM) String newSpaceName,
-                           @ToolParam(description = ORG_PARAM, required = false) String organization) {
+    @McpTool(description = RENAME_SPACE)
+    public void renameSpace(@McpToolParam(description = SPACE_NAME_PARAM) String currentSpaceName,
+                           @McpToolParam(description = NEW_SPACE_NAME_PARAM) String newSpaceName,
+                           @McpToolParam(description = ORG_PARAM, required = false) String organization) {
         RenameSpaceRequest request = RenameSpaceRequest.builder()
                 .name(currentSpaceName)
                 .newName(newSpaceName)

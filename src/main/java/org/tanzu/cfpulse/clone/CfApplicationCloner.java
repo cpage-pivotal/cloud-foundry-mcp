@@ -1,7 +1,7 @@
 package org.tanzu.cfpulse.clone;
 
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
+import org.springaicommunity.mcp.annotation.McpTool;
+import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 import org.tanzu.cfpulse.cf.CfBaseService;
 import org.tanzu.cfpulse.cf.CloudFoundryOperationsFactory;
@@ -39,12 +39,12 @@ public class CfApplicationCloner extends CfBaseService {
     /**
      * Clone an existing Cloud Foundry application by creating a buildpack-specific placeholder
      */
-    @Tool(description = "Clone an existing Cloud Foundry application to create a copy with a new name. Uses buildpack-specific placeholders to ensure consistent deployments.")
+    @McpTool(description = "Clone an existing Cloud Foundry application to create a copy with a new name. Uses buildpack-specific placeholders to ensure consistent deployments.")
     public void cloneApp(
-            @ToolParam(description = "Source application name") String sourceApp,
-            @ToolParam(description = "Target application name") String targetApp,
-            @ToolParam(description = "Organization name (optional)", required = false) String organization,
-            @ToolParam(description = "Space name (optional)", required = false) String space) {
+            @McpToolParam(description = "Source application name") String sourceApp,
+            @McpToolParam(description = "Target application name") String targetApp,
+            @McpToolParam(description = "Organization name (optional)", required = false) String organization,
+            @McpToolParam(description = "Space name (optional)", required = false) String space) {
         
         System.out.println("Starting clone operation: " + sourceApp + " -> " + targetApp);
         

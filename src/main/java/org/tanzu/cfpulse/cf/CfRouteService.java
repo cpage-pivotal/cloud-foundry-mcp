@@ -2,8 +2,8 @@ package org.tanzu.cfpulse.cf;
 
 import org.cloudfoundry.operations.CloudFoundryOperations;
 import org.cloudfoundry.operations.routes.*;
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
+import org.springaicommunity.mcp.annotation.McpTool;
+import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,21 +27,21 @@ public class CfRouteService extends CfBaseService {
         super(operationsFactory);
     }
 
-    @Tool(description = ROUTE_LIST)
+    @McpTool(description = ROUTE_LIST)
     public List<Route> routesList(
-            @ToolParam(description = ORG_PARAM, required = false) String organization,
-            @ToolParam(description = SPACE_PARAM, required = false) String space) {
+            @McpToolParam(description = ORG_PARAM, required = false) String organization,
+            @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         ListRoutesRequest request = ListRoutesRequest.builder().build();
         return getOperations(organization, space).routes().list(request).collectList().block();
     }
 
-    @Tool(description = CREATE_ROUTE)
-    public void createRoute(@ToolParam(description = DOMAIN_PARAM) String domain,
-                           @ToolParam(description = HOST_PARAM, required = false) String host,
-                           @ToolParam(description = PATH_ROUTE_PARAM, required = false) String path,
-                           @ToolParam(description = PORT_PARAM, required = false) Integer port,
-                           @ToolParam(description = ORG_PARAM, required = false) String organization,
-                           @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = CREATE_ROUTE)
+    public void createRoute(@McpToolParam(description = DOMAIN_PARAM) String domain,
+                           @McpToolParam(description = HOST_PARAM, required = false) String host,
+                           @McpToolParam(description = PATH_ROUTE_PARAM, required = false) String path,
+                           @McpToolParam(description = PORT_PARAM, required = false) Integer port,
+                           @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                           @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         CloudFoundryOperations operations = getOperations(organization, space);
         
         String targetSpace = space != null ? space : operationsFactory.getDefaultSpace();
@@ -57,13 +57,13 @@ public class CfRouteService extends CfBaseService {
         operations.routes().create(request).block();
     }
 
-    @Tool(description = DELETE_ROUTE)
-    public void deleteRoute(@ToolParam(description = DOMAIN_PARAM) String domain,
-                           @ToolParam(description = HOST_PARAM, required = false) String host,
-                           @ToolParam(description = PATH_ROUTE_PARAM, required = false) String path,
-                           @ToolParam(description = PORT_PARAM, required = false) Integer port,
-                           @ToolParam(description = ORG_PARAM, required = false) String organization,
-                           @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = DELETE_ROUTE)
+    public void deleteRoute(@McpToolParam(description = DOMAIN_PARAM) String domain,
+                           @McpToolParam(description = HOST_PARAM, required = false) String host,
+                           @McpToolParam(description = PATH_ROUTE_PARAM, required = false) String path,
+                           @McpToolParam(description = PORT_PARAM, required = false) Integer port,
+                           @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                           @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         DeleteRouteRequest.Builder builder = DeleteRouteRequest.builder().domain(domain);
         if (host != null) builder.host(host);
         if (path != null) builder.path(path);
@@ -73,21 +73,21 @@ public class CfRouteService extends CfBaseService {
         getOperations(organization, space).routes().delete(request).block();
     }
 
-    @Tool(description = DELETE_ORPHANED_ROUTES)
-    public void deleteOrphanedRoutes(@ToolParam(description = ORG_PARAM, required = false) String organization,
-                                    @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = DELETE_ORPHANED_ROUTES)
+    public void deleteOrphanedRoutes(@McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                    @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         DeleteOrphanedRoutesRequest request = DeleteOrphanedRoutesRequest.builder().build();
         getOperations(organization, space).routes().deleteOrphanedRoutes(request).block();
     }
 
-    @Tool(description = MAP_ROUTE)
-    public void mapRoute(@ToolParam(description = NAME_PARAM) String applicationName,
-                        @ToolParam(description = DOMAIN_PARAM) String domain,
-                        @ToolParam(description = HOST_PARAM, required = false) String host,
-                        @ToolParam(description = PATH_ROUTE_PARAM, required = false) String path,
-                        @ToolParam(description = PORT_PARAM, required = false) Integer port,
-                        @ToolParam(description = ORG_PARAM, required = false) String organization,
-                        @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = MAP_ROUTE)
+    public void mapRoute(@McpToolParam(description = NAME_PARAM) String applicationName,
+                        @McpToolParam(description = DOMAIN_PARAM) String domain,
+                        @McpToolParam(description = HOST_PARAM, required = false) String host,
+                        @McpToolParam(description = PATH_ROUTE_PARAM, required = false) String path,
+                        @McpToolParam(description = PORT_PARAM, required = false) Integer port,
+                        @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                        @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         MapRouteRequest.Builder builder = MapRouteRequest.builder()
                 .applicationName(applicationName)
                 .domain(domain);
@@ -99,14 +99,14 @@ public class CfRouteService extends CfBaseService {
         getOperations(organization, space).routes().map(request).block();
     }
 
-    @Tool(description = UNMAP_ROUTE)
-    public void unmapRoute(@ToolParam(description = NAME_PARAM) String applicationName,
-                          @ToolParam(description = DOMAIN_PARAM) String domain,
-                          @ToolParam(description = HOST_PARAM, required = false) String host,
-                          @ToolParam(description = PATH_ROUTE_PARAM, required = false) String path,
-                          @ToolParam(description = PORT_PARAM, required = false) Integer port,
-                          @ToolParam(description = ORG_PARAM, required = false) String organization,
-                          @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = UNMAP_ROUTE)
+    public void unmapRoute(@McpToolParam(description = NAME_PARAM) String applicationName,
+                          @McpToolParam(description = DOMAIN_PARAM) String domain,
+                          @McpToolParam(description = HOST_PARAM, required = false) String host,
+                          @McpToolParam(description = PATH_ROUTE_PARAM, required = false) String path,
+                          @McpToolParam(description = PORT_PARAM, required = false) Integer port,
+                          @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                          @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         UnmapRouteRequest.Builder builder = UnmapRouteRequest.builder()
                 .applicationName(applicationName)
                 .domain(domain);

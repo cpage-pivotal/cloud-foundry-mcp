@@ -4,8 +4,8 @@ import org.cloudfoundry.operations.networkpolicies.AddNetworkPolicyRequest;
 import org.cloudfoundry.operations.networkpolicies.ListNetworkPoliciesRequest;
 import org.cloudfoundry.operations.networkpolicies.Policy;
 import org.cloudfoundry.operations.networkpolicies.RemoveNetworkPolicyRequest;
-import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
+import org.springaicommunity.mcp.annotation.McpTool;
+import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,13 +26,13 @@ public class CfNetworkPolicyService extends CfBaseService {
         super(operationsFactory);
     }
 
-    @Tool(description = ADD_NETWORK_POLICY)
-    public void addNetworkPolicy(@ToolParam(description = SOURCE_APP_PARAM) String sourceApp,
-                                @ToolParam(description = DEST_APP_PARAM) String destinationApp,
-                                @ToolParam(description = PROTOCOL_PARAM) String protocol,
-                                @ToolParam(description = PORTS_PARAM) String ports,
-                                @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = ADD_NETWORK_POLICY)
+    public void addNetworkPolicy(@McpToolParam(description = SOURCE_APP_PARAM) String sourceApp,
+                                @McpToolParam(description = DEST_APP_PARAM) String destinationApp,
+                                @McpToolParam(description = PROTOCOL_PARAM) String protocol,
+                                @McpToolParam(description = PORTS_PARAM) String ports,
+                                @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         String[] portParts = ports.split("-");
         Integer startPort = Integer.parseInt(portParts[0]);
         Integer endPort = portParts.length > 1 ? Integer.parseInt(portParts[1]) : null;
@@ -47,20 +47,20 @@ public class CfNetworkPolicyService extends CfBaseService {
         getOperations(organization, space).networkPolicies().add(request).blockLast();
     }
 
-    @Tool(description = LIST_NETWORK_POLICIES)
-    public List<Policy> listNetworkPolicies(@ToolParam(description = ORG_PARAM, required = false) String organization,
-                                           @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = LIST_NETWORK_POLICIES)
+    public List<Policy> listNetworkPolicies(@McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                           @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         ListNetworkPoliciesRequest request = ListNetworkPoliciesRequest.builder().build();
         return getOperations(organization, space).networkPolicies().list(request).collectList().block();
     }
 
-    @Tool(description = REMOVE_NETWORK_POLICY)
-    public void removeNetworkPolicy(@ToolParam(description = SOURCE_APP_PARAM) String sourceApp,
-                                   @ToolParam(description = DEST_APP_PARAM) String destinationApp,
-                                   @ToolParam(description = PROTOCOL_PARAM) String protocol,
-                                   @ToolParam(description = PORTS_PARAM) String ports,
-                                   @ToolParam(description = ORG_PARAM, required = false) String organization,
-                                   @ToolParam(description = SPACE_PARAM, required = false) String space) {
+    @McpTool(description = REMOVE_NETWORK_POLICY)
+    public void removeNetworkPolicy(@McpToolParam(description = SOURCE_APP_PARAM) String sourceApp,
+                                   @McpToolParam(description = DEST_APP_PARAM) String destinationApp,
+                                   @McpToolParam(description = PROTOCOL_PARAM) String protocol,
+                                   @McpToolParam(description = PORTS_PARAM) String ports,
+                                   @McpToolParam(description = ORG_PARAM, required = false) String organization,
+                                   @McpToolParam(description = SPACE_PARAM, required = false) String space) {
         String[] portParts = ports.split("-");
         Integer startPort = Integer.parseInt(portParts[0]);
         Integer endPort = portParts.length > 1 ? Integer.parseInt(portParts[1]) : null;
