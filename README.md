@@ -4,6 +4,9 @@ This MCP Server provides an LLM interface for interacting with your Cloud Foundr
 
 ![Sample](images/sample.png)
 
+### IMPORTANT
+This MCP Server now uses the Streamable HTTP Transport, instead of SSE. If you are connecting to this server with Tanzu Platform Chat, be sure to consult the [README](https://github.com/cpage-pivotal/cf-mcp-client) for instructions on configuring the service binding for Streamable transport.
+
 ## Building the Server
 
 ```bash
