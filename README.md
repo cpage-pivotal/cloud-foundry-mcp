@@ -44,6 +44,59 @@ cf push --vars-file=vars.yaml
 
 The `manifest.yml` references these variables using the `((variable-name))` syntax, which injects them as environment variables at deploy time.
 
+### Publishing to Tanzu Service Marketplace
+
+You can publish this MCP server as a service in the Tanzu Platform marketplace using [Tanzu Service Publisher](https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/service-publisher/10-3/srvc-pub/app-publishing.html). This allows other applications to bind to the MCP server and consume it as a service.
+
+#### Prerequisites
+
+Before publishing, ensure:
+- You have space developer privileges in the app's space
+- The MCP server application is running
+- A route is mapped to the app on the `apps.internal` domain using HTTP protocol
+
+#### Service Definition
+
+A `service.yaml` file is included in the root of this repository with the service configuration for publishing.
+
+#### Publish the Service
+
+Use the Tanzu cf CLI to publish the app:
+
+```bash
+cf publish-service cloud-foundry-mcp-server -f service.yaml
+```
+
+Check the publishing status:
+
+```bash
+cf published-service cloud-foundry-mcp-server
+```
+
+Wait until the status shows `successful`.
+
+#### Enable Service Access
+
+By default, new service offerings are disabled. An admin must enable access for the service to appear in the marketplace:
+
+```bash
+cf enable-service-access cloud-foundry-mcp
+```
+
+#### Create Service Instances
+
+Once enabled, developers can create service instances:
+
+```bash
+cf create-service cloud-foundry-mcp default my-mcp-service
+```
+
+And bind them to applications:
+
+```bash
+cf bind-service my-app my-mcp-service
+```
+
 ## Capabilities
 
 This MCP server exposes the following Cloud Foundry operations as tools:
