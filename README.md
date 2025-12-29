@@ -13,67 +13,36 @@ This MCP Server now uses the Streamable HTTP Transport, instead of SSE. If you a
 ./mvnw clean package
 ```
 
-### Deploying to Cloud Foundry with User-Provided Service
+### Deploying to Cloud Foundry with Variables File
 
-When deploying the MCP server to Cloud Foundry, you can use a user-provided service to inject credentials instead of using environment variables. This approach keeps sensitive credentials out of your manifest files.
+When deploying the MCP server to Cloud Foundry, use a variables file to inject credentials. This approach keeps sensitive credentials out of your manifest files and version control.
 
-#### Create the User-Provided Service
+#### Create a Variables File
 
-Create a user-provided service named `cf-client` with the required Cloud Foundry credentials:
-
-```bash
-cf create-user-provided-service cf-client -p '{
-  "apihost": "api.sys.mycf.com",
-  "username": "your-cf-username",
-  "password": "your-cf-password",
-  "org": "your-org",
-  "space": "your-space"
-}'
-```
-
-Or create it interactively by providing credentials one at a time:
-
-```bash
-cf create-user-provided-service cf-client -p "apihost, username, password, org, space"
-```
-
-#### Bind the Service to Your Application
-
-After deploying the application, bind the service:
-
-```bash
-cf bind-service cloud-foundry-mcp cf-client
-cf restart cloud-foundry-mcp
-```
-
-Or include the service binding in your `manifest.yml`:
+Create a file named `vars.yaml` with your Cloud Foundry credentials:
 
 ```yaml
-applications:
-- name: cloud-foundry-mcp
-  memory: 1G
-  instances: 1
-  path: target/cloud-foundry-mcp-0.0.1-SNAPSHOT.jar
-  services:
-  - cf-client
+CF_APIHOST: api.sys.mycf.com
+CF_USERNAME: your-cf-username
+CF_PASSWORD: your-cf-password
+CF_ORG: your-org
+CF_SPACE: your-space
 ```
 
-The application will automatically read credentials from the `cf-client` service binding via the VCAP_SERVICES environment variable, as configured in `src/main/resources/application.yaml`.
+> **IMPORTANT:** The `vars.yaml` file contains sensitive credentials and should **never** be committed to Git. Add it to your `.gitignore` file:
+> ```bash
+> echo "vars.yaml" >> .gitignore
+> ```
 
-#### Update the Service Credentials
+#### Deploy the Application
 
-If you need to update the credentials:
+Deploy using the `--vars-file` flag:
 
 ```bash
-cf update-user-provided-service cf-client -p '{
-  "apihost": "api.sys.mycf.com",
-  "username": "new-username",
-  "password": "new-password",
-  "org": "new-org",
-  "space": "new-space"
-}'
-cf restart cloud-foundry-mcp
+cf push --vars-file=vars.yaml
 ```
+
+The `manifest.yml` references these variables using the `((variable-name))` syntax, which injects them as environment variables at deploy time.
 
 ## Capabilities
 

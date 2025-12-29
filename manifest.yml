@@ -8,3 +8,8 @@ applications:
     path: target/cloud-foundry-mcp-0.0.1-SNAPSHOT.jar
     env:
       JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 21.+ } }'
+      CF_APIHOST: ((CF_APIHOST))
+      CF_USERNAME: ((CF_USERNAME))
+      CF_PASSWORD: ((CF_PASSWORD))
+      CF_ORG: ((CF_ORG))
+      CF_SPACE: ((CF_SPACE))
